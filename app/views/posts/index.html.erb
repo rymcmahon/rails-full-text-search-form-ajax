@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<%= form_tag(posts_path, method: "get", remote: true) do %>
+  <%= text_field_tag :search, params[:search], placeholder: "Enter search term" %>
+  <%= submit_tag "Search" %>
+<% end %>
+
+<h1>Posts</h1>
+<div id="blogpost-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Body</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @posts.each do |post| %>
+        <tr>
+          <td><%= post.title %></td>
+          <td><%= post.body %></td>
+          <td><%= link_to 'Show', post %></td>
+          <td><%= link_to 'Edit', edit_post_path(post) %></td>
+          <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div id="search-results">
+
+</div>
+
+<br>
+
+<%= link_to 'New Post', new_post_path %>
