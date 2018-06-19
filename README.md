@@ -1,14 +1,15 @@
 ### Rails Full-Text Search Form with AJAX
 
-My most popular post, with over 19,000 pageviews over 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). It benefitted from a great Google search results page rank (usually top 3 for "rails search form") and from the fact that this is a common feature to add to a Rails app.
+My most popular blogpost, with over 19,000 pageviews over 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). It benefitted from a great Google search results page ranking (usually top 3 for "rails search form") and from the fact that a search form is a common feature for any app.
 
-Many readers commented on the article and some even had suggestions for taking the feature further. To respond to many of those requests, I thought I'd write an updated post that demonstrates how to build a more sophisticated search and submit the form via AJAX.
+I received many comments on the blogpost (some were even nice) and a few people asked how they could make the simple search form more sophisticated. In response to those requests, I thought I'd write an updated post that demonstrates how to build a complex, full-text search form that submits via AJAX for that smooth, modern app feel.
 
-Let's start by creating a simple blog app and we will add a form that allows visitors to search for articles by their title or body. I am using Rails 5.2, Ruby 2.4.1, and PostgreSQL 9.6.3.
+Let's create a simple blog app with a form that allows visitors to perform full-text searches of the blogpost titles and bodies while rendering the results without a full-page refresh. I am using Rails 5.2, Ruby 2.4.1, and PostgreSQL 9.6.3 for this demo.
 
 #### The Setup
 
-Create a new Rails app with PostgreSQL as the database:
+Create a new Rails app with PostgreSQL as the database (Postgres is required for the full-text search):
+
 ```ruby
 $ rails new blog --database=postgresql
 ```
@@ -28,6 +29,7 @@ $ rails db:create && rails db:migrate
 Start the Rails server and go to ```http://localhost:3000/posts/``` to render the Posts index page.
 
 We are going to need a few gems—Faker for adding fake data to the development database, jQuery (it was removed from Rails in 5.0), and pg_search for using PostgreSQL’s full-text search. In the Gemfile add:
+
  ```ruby
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 gem 'jquery-rails'
@@ -44,9 +46,10 @@ Open app/assets/javascripts/application.js and add ```//= require jquery3``` so 
 //= require turbolinks
 //= require_tree .
 ```
+
 ### Seed the Database
 
-Let's add some records to the database using the Faker gem. Go to ```app/db``` , open ```seeds.rb``, and add:
+Let's add some records to the database using the Faker gem. Go to ```app/db``` , open ```seeds.rb```, and add:
 
 ```ruby
 100.times do
@@ -57,7 +60,7 @@ Let's add some records to the database using the Faker gem. Go to ```app/db``` ,
 end
 ```
 
-Run ```$ rails db:seed``` and you'll see 100 hipster-themed blogposts in the Post database table and on the index page.
+Run ```$ rails db:seed``` and you'll see 100 hipster-themed blogposts on the index page.
 
 ### Create the Search Form
 
