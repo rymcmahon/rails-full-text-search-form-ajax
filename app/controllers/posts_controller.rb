@@ -6,6 +6,7 @@ class PostsController < ApplicationController
   def index
     if params[:search]
       @search_results_posts = Post.search_by_title_and_body(params[:search])
+      @search_results_total = @search_results_posts.count
       respond_to do |format|
         format.js { render partial: 'search-results'}
       end
