@@ -26,7 +26,7 @@ Create and migrate the database:
 $ rails db:create && rails db:migrate
 ```
 
-Start the Rails server and go to ```http://localhost:3000/posts/``` to render the Posts index page. 
+Start the Rails server and go to ```http://localhost:3000/posts/``` to render the Posts index page.
 
 We are going to need a few gems—Faker for adding fake data to the development database, jQuery (it was removed from Rails in 5.0), and pg_search for using PostgreSQL’s full-text search. In the Gemfile add:
 
@@ -34,7 +34,7 @@ We are going to need a few gems—Faker for adding fake data to the development 
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 gem 'jquery-rails'
 gem 'pg_search'
-``` 
+```
 Run ``` $ bundle install ```.
 
 Open ```app/assets/javascripts/application.js``` and add ```//= require jquery3``` so jQuery is available in the asset pipeline. The file should look like this:
@@ -47,7 +47,7 @@ Open ```app/assets/javascripts/application.js``` and add ```//= require jquery3`
 //= require_tree .
 ```
 
-### Seed the Database 
+### Seed the Database
 
 Let's add some records to the database using the Faker gem. Go to ```app/db``` , open ```seeds.rb```, and add:
 
@@ -64,7 +64,7 @@ Run ```$ rails db:seed``` and you'll see 100 hipster-themed blogposts on the ind
 
 ### Create the Search Form
 
-Let's use a ```form_tag``` for the search form since we aren't saving data to the model. 
+Let's use a ```form_tag``` for the search form since we aren't saving data to the model.
 
 ```ruby
 <%= form_tag(posts_path, method: "get") do %>
@@ -180,7 +180,7 @@ $("#blogpost-table").hide();
 $("#search-results").html("<%= escape_javascript(render :partial => 'results') %>");
 ```
 
-The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create ```_results.html.erb``` in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to change ```@posts``` to  ```@search_results_posts``` inside the loop: 
+The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create ```_results.html.erb``` in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to change ```@posts``` to  ```@search_results_posts``` inside the loop:
 
 ```ruby
 <table>
@@ -208,4 +208,4 @@ The above code renders another partial called "results". It will hold the ERB th
 
 That's it! Try searching for random hipster phrases and watch the matching blogposts appear without a full-page reload! The pg_search gem has a bunch of other options you can add and you can enhance this feature even further by adding autocomplete or a site-wide search that searches multiple models (maybe that’s v3 of this post?)
 
-Visit heroku app to see it in action.
+Check out a live demo of the full-text AJAX search form at [https://rails-full-text-search-form.herokuapp.com/posts](https://rails-full-text-search-form.herokuapp.com/posts)
