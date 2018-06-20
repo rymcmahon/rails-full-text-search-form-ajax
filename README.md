@@ -1,6 +1,6 @@
 ### Rails Full-Text Search Form with AJAX
 
-My most popular blogpost, with over 19,000 pageviews in just 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). The bulk of the traffic was due to its excellent ranking in Google search results (usually top 3 for "rails search form") and from the fact that a lot of devs are apparently searching for tutorials on Rails search forms.
+My most popular blogpost, with over 19,000 pageviews in just 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). The bulk of the traffic was due to its great ranking in Google search results (usually in the top 3 for "rails search form") and from the fact that a lot of devs are apparently searching for tutorials on Rails search forms.
 
 I received many comments on the blogpost (some were even nice) and a few people asked how they could make the simple search form more sophisticated. In response to those requests, I thought I'd write an updated post that demonstrates how to build a complex, full-text search form that submits via AJAX for that smooth, modern app feel.
 
@@ -37,7 +37,7 @@ gem 'pg_search'
 ```
 Run ``` $ bundle install ```.
 
-Open app/assets/javascripts/application.js and add ```//= require jquery3``` so jQuery is available in the asset pipeline. The file should look like this:
+Open ```app/assets/javascripts/application.js``` and add ```//= require jquery3``` so jQuery is available in the asset pipeline. The file should look like this:
 
 ```ruby
 //= require rails-ujs
@@ -75,9 +75,9 @@ Let's use a ```form_tag``` for the search form since we aren't saving data to th
 
 ### Add pg_search to the Post Model
 
-First, let's define the difference between a simple search and a full-text search. Let's say we have a recipe app that allows users to search for recipes by their name and one of the most popular recipes is "Penne with Arrabiata". With a simple search, a phrase such as "penne arrabiata" returns zero matches because the search phrase did not include the word "with." With full-text search, however, searching for "penne arrabiata" will return the "Penne with Arrabiata" recipe and all other recipes with either of those words in the title.
+First, let's define the difference between a simple search and a full-text search. Let's say we have a recipe app that allows users to search for recipes by their name and one of the most popular recipes is "Penne with Arrabiata". With a simple search, a phrase such as "penne arrabiata" returns zero matches because the search phrase did not include the word "with." With full-text search, however, searching for "penne arrabiata" will return the "Penne with Arrabiata" recipe and all other recipes with either of those words in the title. Full-text search is more useful and it's the kind of search visitors are expecting from modern apps.
 
-We need included the pg_search module in the model we want to search. After it's included, create a scope and choose the attributes you want the search to use to look for matches. Setting ```:tsearch => {:prefix => true} ``` will give us the full-text search we desire and it will allow searches for partial words, so a search for "pen" will return "Penne with Arrabiata".
+Let's include the pg_search module in the model we want to search. After it's included, create a scope and choose the attributes you want the search to use to look for matches (in our case, ```:title``` and ```:body```. Setting ```:tsearch => {:prefix => true} ``` will give us the full-text search we desire and it will allow searches for partial words, so a search for "pen" will return "Penne with Arrabiata".
 
 ```ruby
 class Post < ApplicationRecord
@@ -91,7 +91,7 @@ end
 
 ### Filter the Search Params in the Controller
 
-In the controller, let's create a conditional that displays the search results when the search form is submitted or all of the blogposts when a visitor navigates to the page.
+In the controller, let’s create a conditional that displays the search results when the search form is submitted or it displays all of the blogposts in all other circumstances.
 
 ```ruby
 class PostsController < ApplicationController
@@ -180,7 +180,7 @@ $("#blogpost-table").hide();
 $("#search-results").html("<%= escape_javascript(render :partial => 'results') %>");
 ```
 
-The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create _results.html.erb in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to iterate through the  ```@search_results_posts``` instance variable to render the search results:
+The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create ```_results.html.erb``` in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to change ```@posts``` to  ```@search_results_posts``` inside the loop:
 
 ```ruby
 <table>
@@ -206,6 +206,6 @@ The above code renders another partial called "results". It will hold the ERB th
 </table>
 ```
 
-That's it! Try searching for random hipster phrases and watch the matching blogposts appear without a full-page reload!
+That's it! Try searching for random hipster phrases and watch the matching blogposts appear without a full-page reload! The pg_search gem has a bunch of other options you can add and you can enhance this feature even further by adding autocomplete or a site-wide search that searches multiple models (maybe that’s v3 of this post?)
 
 Visit heroku app to see it in action.
