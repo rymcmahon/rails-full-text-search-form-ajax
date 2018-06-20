@@ -1,22 +1,12 @@
-<h3><%= @search_results_total %> posts out of 100 contain that term.</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Body</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @search_results_posts.each.each do |post| %>
-      <tr>
-        <td><%= post.title %></td>
-        <td><%= post.body %></td>
-        <td><%= link_to 'Show', post %></td>
-        <td><%= link_to 'Edit', edit_post_path(post) %></td>
-        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="search-results-count animated fadeInDown">
+  <p><%= @search_results_total %> blogposts out of 100 contain "<%= "#{params[:search]}" %>".</p>
+</div>
+<% @search_results_posts.each do |post| %>
+  <div class="blog-card-title animated fadeInUp">
+    <p><%= post.created_at.strftime("%B %e, %Y") %></p>
+  </div>
+  <div class="blog-card-body animated fadeInUp">
+    <h3><%= post.title %></h3>
+    <p><%= post.body %></p>
+  </div>
+<% end %>
