@@ -10,6 +10,7 @@
 100.times do
   Post.create(
     title: Faker::Hipster.sentence,
-    body: Faker::Hipster.paragraph(6)
+    body: Faker::Hipster.paragraph(6),
+    created_at: Faker::Date.between(4.months.ago, Date.today)
   )
 end
