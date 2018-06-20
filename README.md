@@ -1,6 +1,6 @@
 ### Rails Full-Text Search Form with AJAX
 
-My most popular blogpost, with over 19,000 pageviews in just 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). The bulk of the traffic was due to its great ranking in Google search results (usually in the top 3 for "rails search form") and from the fact that a lot of devs are apparently searching for tutorials on Rails search forms.
+My most popular blogpost, with over 19,000 pageviews in just 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). Nearly all of the traffic (92%) was from Google because the post consistently ranked in the top 3 Google search page results for the term "rails search form". I guess a lot of Rails devs are looking for tutorials on search forms.
 
 I received many comments on the blogpost (some were even nice) and a few people asked how they could make the simple search form more sophisticated. In response to those requests, I thought I'd write an updated post that demonstrates how to build a complex, full-text search form that submits via AJAX for that smooth, modern app feel.
 
@@ -26,7 +26,7 @@ Create and migrate the database:
 $ rails db:create && rails db:migrate
 ```
 
-Start the Rails server and go to ```http://localhost:3000/posts/``` to render the Posts index page.
+Start the Rails server and go to ```http://localhost:3000/posts/``` to render the Posts index page. 
 
 We are going to need a few gems—Faker for adding fake data to the development database, jQuery (it was removed from Rails in 5.0), and pg_search for using PostgreSQL’s full-text search. In the Gemfile add:
 
@@ -34,7 +34,7 @@ We are going to need a few gems—Faker for adding fake data to the development 
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 gem 'jquery-rails'
 gem 'pg_search'
-```
+``` 
 Run ``` $ bundle install ```.
 
 Open ```app/assets/javascripts/application.js``` and add ```//= require jquery3``` so jQuery is available in the asset pipeline. The file should look like this:
@@ -47,7 +47,7 @@ Open ```app/assets/javascripts/application.js``` and add ```//= require jquery3`
 //= require_tree .
 ```
 
-### Seed the Database
+### Seed the Database 
 
 Let's add some records to the database using the Faker gem. Go to ```app/db``` , open ```seeds.rb```, and add:
 
@@ -64,7 +64,7 @@ Run ```$ rails db:seed``` and you'll see 100 hipster-themed blogposts on the ind
 
 ### Create the Search Form
 
-Let's use a ```form_tag``` for the search form since we aren't saving data to the model.
+Let's use a ```form_tag``` for the search form since we aren't saving data to the model. 
 
 ```ruby
 <%= form_tag(posts_path, method: "get") do %>
@@ -180,7 +180,7 @@ $("#blogpost-table").hide();
 $("#search-results").html("<%= escape_javascript(render :partial => 'results') %>");
 ```
 
-The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create ```_results.html.erb``` in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to change ```@posts``` to  ```@search_results_posts``` inside the loop:
+The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create ```_results.html.erb``` in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to change ```@posts``` to  ```@search_results_posts``` inside the loop: 
 
 ```ruby
 <table>
