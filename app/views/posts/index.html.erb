@@ -3,7 +3,7 @@
 <div class="container">
   <div class="form-wrap">
     <%= form_tag(posts_path, method: "get", remote: true) do %>
-      <%= text_field_tag :search, params[:search], placeholder: "Enter search term" %>
+      <%= text_field_tag :search, params[:search], placeholder: "Enter hipster term" %>
       <%= submit_tag "Search", id:"search-btn" %>
     <% end %>
   </div>
