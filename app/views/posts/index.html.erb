@@ -4,7 +4,7 @@
   <div class="form-wrap">
     <%= form_tag(posts_path, method: "get", remote: true) do %>
       <%= text_field_tag :search, params[:search], placeholder: "Enter search term" %>
-      <%= submit_tag "Search" %>
+      <%= submit_tag "Search", id:"search-btn" %>
     <% end %>
   </div>
   <div id="blogpost-table">

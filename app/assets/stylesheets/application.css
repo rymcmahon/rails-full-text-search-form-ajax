@@ -31,7 +31,7 @@ body {
 .blog-card-body {
   background: #fff;
   color: #000;
-  /* border-radius: 2px; */
+  border-radius: 2px;
   /* display: inline-block;
   height: 300px; */
   margin: 0 1rem 1rem 1rem;
@@ -41,19 +41,38 @@ body {
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 .form-wrap {
-  margin: 1rem;
+  margin: 1rem 1rem 4rem 1rem;
 }
 h3 {
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
   letter-spacing: 1px;
+  line-height: 23px;
 }
 p {
   font-family: 'Roboto', sans-serif;
   font-size: 17px;
-    line-height: 23px;
-    letter-spacing: 1px;
+  line-height: 23px;
+  letter-spacing: 1px;
 }
 .search-results-count {
   margin: 1rem;
+}
+
+input#search {
+  width: 25%;
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 2px;
+  border-style: none;
+  border: solid 1px #d5d5d5;
+}
+
+#search-btn {
+  background-color: #A81B56;
+  color: #fff;
+  border: solid 1px #A81B56;
+  border-radius: 2px;
+  padding: 5px 15px;
+  font-size: 14px;
 }
