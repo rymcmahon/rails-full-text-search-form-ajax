@@ -1,10 +1,10 @@
 ### Rails Full-Text Search Form with AJAX
 
-My most popular blogpost, with over 19,000 pageviews over 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). It benefitted from a great Google search results page ranking (usually top 3 for "rails search form") and from the fact that a search form is a common feature for any app.
+My most popular blogpost, with over 19,000 pageviews in just 18 months, is [Create a Simple Search Form with Rails](http://www.rymcmahon.com/articles/2). The bulk of the traffic was due to its excellent ranking in Google search results (usually top 3 for "rails search form") and from the fact that a lot of devs are apparently searching for tutorials on Rails search forms.
 
 I received many comments on the blogpost (some were even nice) and a few people asked how they could make the simple search form more sophisticated. In response to those requests, I thought I'd write an updated post that demonstrates how to build a complex, full-text search form that submits via AJAX for that smooth, modern app feel.
 
-Let's create a simple blog app with a form that allows visitors to perform full-text searches of the blogpost titles and bodies while rendering the results without a full-page refresh. I am using Rails 5.2, Ruby 2.4.1, and PostgreSQL 9.6.3 for this demo.
+Let's create a simple blog app with a form that allows visitors to perform full-text searches of the blogpost titles and body text while rendering the results without a full-page refresh. I am using Rails 5.2, Ruby 2.4.1, and PostgreSQL 9.6.3 for this demo.
 
 #### The Setup
 
@@ -64,6 +64,8 @@ Run ```$ rails db:seed``` and you'll see 100 hipster-themed blogposts on the ind
 
 ### Create the Search Form
 
+Let's use a ```form_tag``` for the search form since we aren't saving data to the model.
+
 ```ruby
 <%= form_tag(posts_path, method: "get") do %>
   <%= text_field_tag :search, params[:search], placeholder: "Enter search term" %>
@@ -72,6 +74,10 @@ Run ```$ rails db:seed``` and you'll see 100 hipster-themed blogposts on the ind
 ```
 
 ### Add pg_search to the Post Model
+
+First, let's define the difference between a simple search and a full-text search. Let's say we have a recipe app that allows users to search for recipes by their name and one of the most popular recipes is "Penne with Arrabiata". With a simple search, a phrase such as "penne arrabiata" returns zero matches because the search phrase did not include the word "with." With full-text search, however, searching for "penne arrabiata" will return the "Penne with Arrabiata" recipe and all other recipes with either of those words in the title.
+
+We need included the pg_search module in the model we want to search. After it's included, create a scope and choose the attributes you want the search to use to look for matches. Setting ```:tsearch => {:prefix => true} ``` will give us the full-text search we desire and it will allow searches for partial words, so a search for "pen" will return "Penne with Arrabiata".
 
 ```ruby
 class Post < ApplicationRecord
@@ -84,6 +90,8 @@ end
 ```
 
 ### Filter the Search Params in the Controller
+
+In the controller, let's create a conditional that displays the search results when the search form is submitted or all of the blogposts when a visitor navigates to the page.
 
 ```ruby
 class PostsController < ApplicationController
@@ -104,7 +112,7 @@ end
 
 ### Add AJAX
 
-Make the search form submit via AJAX
+Submitting a form with AJAX allows us to insert search results into the DOM without reloading the entire page. This is a nice UX touch for users who may perform multiple searches during their visit. To submit a form via AJAX in Rails, add ```remote: true``` to the ```form_tag``` arguments.
 
 ```ruby
 <%= form_tag(posts_path, method: "get", remote: true) do %>
@@ -113,7 +121,7 @@ Make the search form submit via AJAX
 <% end %>
 ```
 
-Add a ```respond_to``` block so the index action can respond to the AJAX call with JavaScript.
+Next, we need a ```respond_to``` block so the index action can respond to the AJAX call with JavaScript, since we are no longer submitting the form via HTML. The ```respond_to``` block is going to render a partial called "search-results" that we will create shortly.
 
 ```ruby
 class PostsController < ApplicationController
@@ -133,7 +141,7 @@ class PostsController < ApplicationController
   end
   ```
 
-Wrap the blogpost table in a ```<div>``` with an ```id="blogpost-table"``` and right after the ```</div>``` add another ```<div>``` with an ```id="search-results"```:
+On the index page, we need to wrap a ```<div>``` around the table and assign it an id of "blogpost-table". We also need to place an empty ```<div>``` with an id of "search-results" immediately after the closing tag of the first ```<div>```. Using jQuery, we are going to hide the "blogpost-table" ```<div>``` when a search is performed and insert the results in the "search-results" ```<div>``` via JavaScript.
 
 ```ruby
 <div id="blogpost-table">
@@ -164,14 +172,15 @@ Wrap the blogpost table in a ```<div>``` with an ```id="blogpost-table"``` and r
 </div>
 ```
 
-In ```app/views/posts/``` create ```_search-results.js.rb```, a file that will store the jQuery that will hide the unfiltered blogpost-table div and display the search results in the search-results div. Add the following jQuery:
+### Sprinkles of jQuery
+In ```app/views/posts/``` create ```_search-results.js.rb```, a file that will store the jQuery that will hide the unfiltered blogpost-table ```<div>``` and display the search results in the search-results ```<div>```. Add the following jQuery:
 
 ```javascript
 $("#blogpost-table").hide();
 $("#search-results").html("<%= escape_javascript(render :partial => 'results') %>");
 ```
 
-The above code renders another partial called "results". It will hold the erb that will display the results of our search and gets injected into the search-results div. Create ```_results.html.erb``` in ```app/views/posts/```:
+The above code renders another partial called "results". It will hold the ERB that will display the results of our search and gets injected into ```<div id="search-results">.``` Create _results.html.erb in ```app/views/posts/``` and add the same code for the table in ```views/posts/index.html.erb```, but be sure to iterate through the  ```@search_results_posts``` instance variable to render the search results:
 
 ```ruby
 <table>
@@ -184,7 +193,7 @@ The above code renders another partial called "results". It will hold the erb th
   </thead>
 
   <tbody>
-    <% @search_results_posts.each.each do |post| %>
+    <% @search_results_posts.each do |post| %>
       <tr>
         <td><%= post.title %></td>
         <td><%= post.body %></td>
@@ -196,3 +205,7 @@ The above code renders another partial called "results". It will hold the erb th
   </tbody>
 </table>
 ```
+
+That's it! Try searching for random hipster phrases and watch the matching blogposts appear without a full-page reload!
+
+Visit heroku app to see it in action.
