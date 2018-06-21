@@ -1,5 +1,5 @@
 <div class="search-results-count animated fadeInDown">
-  <p><%= @search_results_total %> blogposts out of 100 contain "<%= "#{params[:search]}" %>".</p>
+  <p><%= @search_results_total %> out of 100 blogposts contain "<%= "#{params[:search]}" %>".</p>
 </div>
 <% @search_results_posts.each do |post| %>
   <div class="blog-card-title animated fadeInUp">
@@ -7,6 +7,6 @@
   </div>
   <div class="blog-card-body animated fadeInUp">
     <h3><%= post.title %></h3>
-    <p><%= post.body %></p>
+    <p><%= post.body.truncate(200, separator: ' ') %></p>
   </div>
 <% end %>

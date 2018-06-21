@@ -14,7 +14,7 @@
       </div>
       <div class="blog-card-body">
         <h3><%= post.title %></h3>
-        <p><%= post.body %></p>
+        <p><%= post.body.truncate(200, separator: ' ') %></p>
       </div>
     <% end %>
   </div>

@@ -16,6 +16,7 @@
 
 body {
   background-color: #EEEEEE;
+  margin: 0;
 }
 
 .container {
@@ -84,8 +85,25 @@ input#search {
   color: #fff;
   border: solid 1px #A81B56;
   border-radius: 2px;
-  padding: 5px 49px;
+  padding: 5px 0;
   font-size: 14px;
+}
+
+@media (min-width:769px) {
+  #search-btn {
+    width: 22%;
+  }
+}
+
+@media (max-width:768px) {
+  #search-btn {
+    padding: 9px 0;
+    width: 20%;
+  }
+  input#search {
+    width: 72%;
+    padding: 10px 6px;
+  }
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
